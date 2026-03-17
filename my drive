@@ -1,0 +1,23 @@
+import time
+import psutil
+import requests
+
+BOT_TOKEN = "YOUR_TELEGRAM_BOT_TOKEN"
+CHAT_ID = "YOUR_CHAT_ID"
+
+known = set()
+
+def send_alert(message):
+    url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
+    requests.post(url, data={"chat_id": CHAT_ID, "text": message})
+
+while True:
+    current = set(p.device for p in psutil.disk_partitions())
+
+    new = current - known
+
+    if new:
+        send_alert("⚠️ USB inserted on your computer!")
+
+    known = current
+	    time.sleep(2
